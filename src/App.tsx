@@ -1,24 +1,890 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./index.css";
+import { Table, Button, Modal, Input } from "antd";
+import type { ColumnsType } from "antd/es/table";
+
+interface DataType {
+  id: number;
+  key?: string;
+  name: string;
+  gender: string;
+  email: string;
+  address: {
+    street: string;
+    city: string;
+  };
+  phone: string;
+}
 
 function App() {
+  const [isEdit, setIsedit] = useState<boolean>(false);
+  const [editedMember, setEditedMember] = useState<DataType | null>(null);
+
+  const [dataSource, setDataSource] = useState([
+    {
+      id: 8,
+      name: "Sheila Hill",
+      email: "sheilahill@gology.com",
+      gender: "female",
+      address: {
+        street: "Mill Lane",
+        city: "San Diego",
+      },
+      phone: "+1 (946) 534-3903",
+    },
+    {
+      id: 9,
+      name: "Huffman Butler",
+      email: "huffmanbutler@gology.com",
+      gender: "male",
+      address: {
+        street: "Clermont Avenue",
+        city: "Los Angeles",
+      },
+      phone: "+1 (895) 510-asdasdasd",
+    },
+    {
+      i: 10,
+      name: "Vilma Jefferson",
+      email: "vilmajefferson@gology.com",
+      gender: "female",
+      address: {
+        street: "Bath Avenue",
+        city: "New York",
+      },
+      phone: "+1 (814) 496-3905",
+    },
+    {
+      id: 11,
+      name: "Cassandra Nguyen",
+      email: "cassandranguyen@gology.com",
+      gender: "female",
+      address: {
+        street: "Hamilton Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (946) 426-2243",
+    },
+    {
+      id: 12,
+      name: "Lenora Clements",
+      email: "lenoraclements@gology.com",
+      gender: "female",
+      address: {
+        street: "Seba Avenue",
+        city: "San Diego",
+      },
+      phone: "+1 (838) 598-2355",
+    },
+    {
+      id: 13,
+      name: "Hanson Goodwin",
+      email: "hansongoodwin@gology.com",
+      gender: "male",
+      address: {
+        street: "Cranberry Street",
+        city: "New York",
+      },
+      phone: "+1 (947) 576-2508",
+    },
+    {
+      id: 14,
+      name: "Lauren Fox",
+      email: "laurenfox@gology.com",
+      gender: "female",
+      address: {
+        street: "Prospect Place",
+        city: "Los Angeles",
+      },
+      phone: "+1 (898) 468-2841",
+    },
+    {
+      id: 15,
+      name: "Augusta Vazquez",
+      email: "augustavazquez@gology.com",
+      gender: "female",
+      address: {
+        street: "Radde Place",
+        city: "Los Angeles",
+      },
+      phone: "+1 (918) 520-3519",
+    },
+    {
+      id: 16,
+      name: "Craig Knight",
+      email: "craigknight@gology.com",
+      gender: "male",
+      address: {
+        street: "Franklin Avenue",
+        city: "San Diego",
+      },
+      phone: "+1 (965) 495-3738",
+    },
+    {
+      id: 2,
+      name: "Melva Rogers",
+      email: "melvarogers@gology.com",
+      gender: "female",
+      address: {
+        street: "Gardner Avenue",
+        city: "New York",
+      },
+      phone: "+1 (927) 435-3074",
+    },
+    {
+      id: 3,
+      name: "Carla Cain",
+      email: "carlacain@gology.com",
+      gender: "female",
+      address: {
+        street: "Strong Place",
+        city: "Los Angeles",
+      },
+      phone: "+1 (997) 454-2728",
+    },
+    {
+      id: 4,
+      name: "Rhoda George",
+      email: "rhodageorge@gology.com",
+      gender: "female",
+      address: {
+        street: "Harway Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (860) 542-3897",
+    },
+    {
+      id: 5,
+      name: "Atkins Cummings",
+      email: "atkinscummings@gology.com",
+      gender: "male",
+      address: {
+        street: "Troy Avenue",
+        city: "New York",
+      },
+      phone: "+1 (985) 469-2819",
+    },
+    {
+      id: 6,
+      name: "Francine Rosales",
+      email: "francinerosales@gology.com",
+      gender: "female",
+      address: {
+        street: "Aitken Place",
+        city: "San Diego",
+      },
+      phone: "+1 (813) 497-2767",
+    },
+    {
+      id: 7,
+      name: "Malone Petersen",
+      email: "malonepetersen@gology.com",
+      gender: "male",
+      address: {
+        street: "Florence Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (880) 402-3541",
+    },
+    {
+      id: 18,
+      name: "Maryann Watts",
+      email: "maryannwatts@gology.com",
+      gender: "female",
+      address: {
+        street: "Church Lane",
+        city: "Chicago",
+      },
+      phone: "+1 (923) 432-3901",
+    },
+    {
+      id: 19,
+      name: "Adriana Diaz",
+      email: "adrianadiaz@gology.com",
+      gender: "female",
+      address: {
+        street: "Lawton Street",
+        city: "San Diego",
+      },
+      phone: "+1 (806) 473-2162",
+    },
+    {
+      id: 20,
+      name: "Reid Valentine",
+      email: "reidvalentine@gology.com",
+      gender: "male",
+      address: {
+        street: "Montague Terrace",
+        city: "Chicago",
+      },
+      phone: "+1 (808) 435-2033",
+    },
+    {
+      id: 21,
+      name: "Melendez Mathews",
+      email: "melendezmathews@gology.com",
+      gender: "male",
+      address: {
+        street: "Coyle Street",
+        city: "San Diego",
+      },
+      phone: "+1 (848) 438-2947",
+    },
+    {
+      id: 22,
+      name: "Cara Wilkerson",
+      email: "carawilkerson@gology.com",
+      gender: "female",
+      address: {
+        street: "Bradford Street",
+        city: "New York",
+      },
+      phone: "+1 (893) 461-3709",
+    },
+    {
+      id: 23,
+      name: "Keith Bennett",
+      email: "keithbennett@gology.com",
+      gender: "male",
+      address: {
+        street: "Brighton Court",
+        city: "New York",
+      },
+      phone: "+1 (985) 517-3173",
+    },
+    {
+      id: 24,
+      name: "Tamra Galloway",
+      email: "tamragalloway@gology.com",
+      gender: "female",
+      address: {
+        street: "Eldert Lane",
+        city: "Los Angeles",
+      },
+      phone: "+1 (871) 530-2931",
+    },
+    {
+      id: 25,
+      name: "Norton Slater",
+      email: "nortonslater@gology.com",
+      gender: "male",
+      address: {
+        street: "Erasmus Street",
+        city: "Los Angeles",
+      },
+      phone: "+1 (924) 562-2254",
+    },
+    {
+      id: 26,
+      name: "Suarez Guerra",
+      email: "suarezguerra@gology.com",
+      gender: "male",
+      address: {
+        street: "Leonard Street",
+        city: "Los Angeles",
+      },
+      phone: "+1 (938) 556-2430",
+    },
+    {
+      id: 27,
+      name: "Lillian Johnson",
+      email: "lillianjohnson@gology.com",
+      gender: "female",
+      address: {
+        street: "Himrod Street",
+        city: "Chicago",
+      },
+      phone: "+1 (804) 459-3296",
+    },
+    {
+      id: 28,
+      name: "Mcfarland Humphrey",
+      email: "mcfarlandhumphrey@gology.com",
+      gender: "male",
+      address: {
+        street: "Garfield Place",
+        city: "San Diego",
+      },
+      phone: "+1 (860) 539-3718",
+    },
+    {
+      id: 29,
+      name: "Gould Frye",
+      email: "gouldfrye@gology.com",
+      gender: "male",
+      address: {
+        street: "Quentin Road",
+        city: "New York",
+      },
+      phone: "+1 (951) 450-2848",
+    },
+    {
+      id: 30,
+      name: "Sheena Steele",
+      email: "sheenasteele@gology.com",
+      gender: "female",
+      address: {
+        street: "Lawrence Street",
+        city: "Chicago",
+      },
+      phone: "+1 (867) 541-2021",
+    },
+    {
+      id: 31,
+      name: "Beatriz Kirk",
+      email: "beatrizkirk@gology.com",
+      gender: "female",
+      address: {
+        street: "Jewel Street",
+        city: "San Diego",
+      },
+      phone: "+1 (851) 464-2835",
+    },
+    {
+      id: 32,
+      name: "Riggs Bates",
+      email: "riggsbates@gology.com",
+      gender: "male",
+      address: {
+        street: "Campus Place",
+        city: "New York",
+      },
+      phone: "+1 (845) 509-2518",
+    },
+    {
+      id: 33,
+      name: "Jeanette Michael",
+      email: "jeanettemichael@gology.com",
+      gender: "female",
+      address: {
+        street: "Cropsey Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (949) 450-2499",
+    },
+    {
+      id: 34,
+      name: "Florence Sexton",
+      email: "florencesexton@gology.com",
+      gender: "female",
+      address: {
+        street: "Bouck Court",
+        city: "San Diego",
+      },
+      phone: "+1 (975) 578-3582",
+    },
+    {
+      id: 35,
+      name: "Ashley Griffin",
+      email: "ashleygriffin@gology.com",
+      gender: "male",
+      address: {
+        street: "India Street",
+        city: "New York",
+      },
+      phone: "+1 (825) 593-2465",
+    },
+    {
+      id: 36,
+      name: "Janna Cohen",
+      email: "jannacohen@gology.com",
+      gender: "female",
+      address: {
+        street: "Cameron Court",
+        city: "Chicago",
+      },
+      phone: "+1 (970) 405-2054",
+    },
+    {
+      id: 37,
+      name: "Harmon Carr",
+      email: "harmoncarr@gology.com",
+      gender: "male",
+      address: {
+        street: "Kensington Street",
+        city: "San Diego",
+      },
+      phone: "+1 (946) 533-3206",
+    },
+    {
+      id: 38,
+      name: "Jaclyn Walton",
+      email: "jaclynwalton@gology.com",
+      gender: "female",
+      address: {
+        street: "Ocean Parkway",
+        city: "San Diego",
+      },
+      phone: "+1 (863) 529-2687",
+    },
+    {
+      id: 39,
+      name: "Fuentes Hutchinson",
+      email: "fuenteshutchinson@gology.com",
+      gender: "male",
+      address: {
+        street: "Ridgecrest Terrace",
+        city: "New York",
+      },
+      phone: "+1 (802) 419-2801",
+    },
+    {
+      id: 40,
+      name: "Bowers Wooten",
+      email: "bowerswooten@gology.com",
+      gender: "male",
+      address: {
+        street: "Ralph Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (893) 508-3700",
+    },
+    {
+      id: 41,
+      name: "Millie Dotson",
+      email: "milliedotson@gology.com",
+      gender: "female",
+      address: {
+        street: "Bokee Court",
+        city: "New York",
+      },
+      phone: "+1 (893) 508-3700",
+    },
+    {
+      id: 42,
+      name: "Rebekah Wade",
+      email: "rebekahwade@gology.com",
+      gender: "female",
+      address: {
+        street: "Leonora Court",
+        city: "Los Angeles",
+      },
+      phone: "+1 (900) 419-2371",
+    },
+    {
+      id: 43,
+      name: "Antoinette Sanders",
+      email: "antoinettesanders@gology.com",
+      gender: "female",
+      address: {
+        street: "Dahlgreen Place",
+        city: "San Diego",
+      },
+      phone: "+1 (958) 573-2385",
+    },
+    {
+      id: 44,
+      name: "Coleen Ford",
+      email: "coleenford@gology.com",
+      gender: "female",
+      address: {
+        street: "Story Court",
+        city: "San Diego",
+      },
+      phone: "+1 (879) 546-3910",
+    },
+    {
+      id: 45,
+      name: "Ericka Miller",
+      email: "erickamiller@gology.com",
+      gender: "female",
+      address: {
+        street: "Rochester Avenue",
+        city: "Chicago",
+      },
+      phone: "+1 (862) 424-3351",
+    },
+    {
+      id: 46,
+      name: "Hendrix Best",
+      email: "hendrixbest@gology.com",
+      gender: "male",
+      address: {
+        street: "Foster Avenue",
+        city: "Los Angeles",
+      },
+      phone: "+1 (939) 430-2178",
+    },
+    {
+      id: 47,
+      name: "Robbie Sosa",
+      email: "robbiesosa@gology.com",
+      gender: "female",
+      address: {
+        street: "Hunts Lane",
+        city: "Chicago",
+      },
+      phone: "+1 (912) 555-3013",
+    },
+    {
+      id: 48,
+      name: "Stout Shaw",
+      email: "stoutshaw@gology.com",
+      gender: "male",
+      address: {
+        street: "Dakota Place",
+        city: "Chicago",
+      },
+      phone: "+1 (833) 434-3092",
+    },
+    {
+      id: 49,
+      name: "Ferrell Carter",
+      email: "ferrellcarter@gology.com",
+      gender: "male",
+      address: {
+        street: "Auburn Place",
+        city: "Los Angeles",
+      },
+      phone: "+1 (835) 529-2749",
+    },
+    {
+      id: 50,
+      name: "Leola Dennis",
+      email: "leoladennis@gology.com",
+      gender: "female",
+      address: {
+        street: "Dean Street",
+        city: "Los Angeles",
+      },
+      phone: "+1 (805) 552-3847",
+    },
+    {
+      id: 51,
+      name: "Lara Oconnor",
+      email: "laraoconnor@gology.com",
+      gender: "female",
+      address: {
+        street: "Herkimer Court",
+        city: "Los Angeles",
+      },
+      phone: "+1 (981) 415-2406",
+    },
+    {
+      id: 52,
+      name: "Alejandra Cobb",
+      email: "alejandracobb@gology.com",
+      gender: "female",
+      address: {
+        street: "Lynch Street",
+        city: "San Diego",
+      },
+      phone: "+1 (906) 415-2311",
+    },
+    {
+      id: 53,
+      name: "Mendez Hahn",
+      email: "mendezhahn@gology.com",
+      gender: "male",
+      address: {
+        street: "Ludlam Place",
+        city: "Chicago",
+      },
+      phone: "+1 (975) 452-2489",
+    },
+    {
+      id: 54,
+      name: "Mejia Mays",
+      email: "mejiamays@gology.com",
+      gender: "male",
+      address: {
+        street: "Tampa Court",
+        city: "New York",
+      },
+      phone: "+1 (920) 541-2446",
+    },
+    {
+      id: 55,
+      name: "Bolton Rowe",
+      email: "boltonrowe@gology.com",
+      gender: "male",
+      address: {
+        street: "Maujer Street",
+        city: "New York",
+      },
+      phone: "+1 (875) 595-3711",
+    },
+    {
+      id: 56,
+      name: "Kirkland Atkins",
+      email: "kirklandatkins@gology.com",
+      gender: "male",
+      address: {
+        street: "Fulton Street",
+        city: "Chicago",
+      },
+      phone: "+1 (962) 437-3225",
+    },
+    {
+      id: 57,
+      name: "Burgess Strickland",
+      email: "burgessstrickland@gology.com",
+      gender: "male",
+      address: {
+        street: "Sumner Place",
+        city: "New York",
+      },
+      phone: "+1 (928) 478-3924",
+    },
+    {
+      id: 58,
+      name: "Mildred Alvarado",
+      email: "mildredalvarado@gology.com",
+      gender: "female",
+      address: {
+        street: "Thatford Avenue",
+        city: "San Diego",
+      },
+      phone: "+1 (941) 567-2861",
+    },
+    {
+      id: 59,
+      name: "Wells Castaneda",
+      email: "wellscastaneda@gology.com",
+      gender: "male",
+      address: {
+        street: "Cyrus Avenue",
+        city: "San Diego",
+      },
+      phone: "+1 (951) 465-3463",
+    },
+    {
+      id: 60,
+      name: "Mcclain French",
+      email: "mcclainfrench@gology.com",
+      gender: "male",
+      address: {
+        street: "Village Court",
+        city: "San Diego",
+      },
+      phone: "+1 (870) 500-2974",
+    },
+    {
+      id: 61,
+      name: "Anita Branch",
+      email: "anitabranch@gology.com",
+      gender: "female",
+      address: {
+        street: "Nassau Avenue",
+        city: "New York",
+      },
+      phone: "+1 (833) 549-3771",
+    },
+    {
+      id: 62,
+      name: "Downs Hatfield",
+      email: "downshatfield@gology.com",
+      gender: "male",
+      address: {
+        street: "Locust Avenue",
+        city: "San Diego",
+      },
+      phone: "+1 (813) 531-3665",
+    },
+  ]);
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+    },
+    {
+      title: "City",
+      dataIndex: "address",
+      key: "address",
+      render: ({ city }) => city,
+    },
+    {
+      title: "Street",
+      dataIndex: "address",
+      key: "address",
+      render: ({ street }) => street,
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <Button
+            type="primary"
+            onClick={() => {
+              editMember(record);
+            }}
+          >
+            Edit
+          </Button>
+          <Button
+            type="primary"
+            danger
+            onClick={() => {
+              onDeleteMember(record);
+            }}
+          >
+            Delete
+          </Button>
+        </>
+      ),
+    },
+  ];
+
+  // add new member onClick function
+
+  const onAddMember = () => {
+    const newStudent: DataType = {
+      id: Math.random() * 411,
+      name: "name",
+      email: "email",
+      gender: "gender",
+      address: {
+        street: "street",
+        city: "city",
+      },
+      phone: "phone",
+    };
+    setDataSource((pre) => {
+      return [...pre, newStudent];
+    });
+  };
+
+  // remove a member onclick function
+
+  const onDeleteMember = (record: DataType) => {
+    setDataSource((pre) => {
+      return pre.filter((member) => member.id !== record.id);
+    });
+  };
+
+  // edit member onclick function
+
+  const editMember = (record: DataType) => {
+    setIsedit(true);
+    setEditedMember({ ...record });
+  };
+
+  // reset editing member
+
+  const resetEditing = () => {
+    setIsedit(false);
+    setEditedMember(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Table
+        //@ts-ignore
+        columns={columns}
+        dataSource={dataSource}
+      />
+      <Button danger onClick={onAddMember}>
+        Add
+      </Button>
+      <Modal
+        title="edit"
+        okText="Save"
+        open={isEdit}
+        onCancel={() => {
+          resetEditing();
+        }}
+        onOk={() => {
+          //@ts-ignore
+          setDataSource((pre) => {
+            return pre.map((member) => {
+              //@ts-ignore
+              if (member.id === editedMember.id) {
+                return editedMember;
+              } else {
+                return member;
+              }
+            });
+          });
+          resetEditing();
+        }}
+      >
+        <Input
+          value={editedMember?.name}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return { ...pre, name: e.target.value };
+            });
+          }}
+        />
+        <Input
+          value={editedMember?.email}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return { ...pre, email: e.target.value };
+            });
+          }}
+        />
+        <Input
+          value={editedMember?.address.city}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return {
+                ...pre,
+                address: {
+                  //@ts-ignore
+                  ...pre.address,
+                  city: e.target.value,
+                },
+              };
+            });
+          }}
+        />
+        <Input
+          value={editedMember?.address.street}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return {
+                ...pre,
+                address: {
+                  //@ts-ignore
+                  ...pre.address,
+                  street: e.target.value,
+                },
+              };
+            });
+          }}
+        />
+        <Input
+          value={editedMember?.gender}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return { ...pre, gender: e.target.value };
+            });
+          }}
+        />
+        <Input
+          value={editedMember?.phone}
+          onChange={(e) => {
+            //@ts-ignore
+            setEditedMember((pre) => {
+              return { ...pre, phone: e.target.value };
+            });
+          }}
+        />
+      </Modal>
     </div>
   );
 }
